@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointment System</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f4c9db;
+            font-family: Arial, sans-serif;
+        }
+
+        .content-container {
+            background-color: #fff;
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo img {
+            width: 100px;
+        }
+
+        header {
+            background-color: #fff;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            padding: 10px 0;
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="container">
+    <div class="row align-items-center">
+        <div class="col-md-3">
+            <div class="logo text-left">
+                <img src="../../static/img/logo.png" alt="Your Logo" width="300"> <!-- Adjust path as needed -->
+            </div>
+        </div>
+        <div class="col-md-9">
+            <nav class="nav justify-content-end">
+                <a class="nav-link" href="/book-appointment/">Book Appointment</a>
+                <a class="nav-link" href="/view-appointments/">View Appointments</a>
+
+                <!-- Greeting Dropdown -->
+                <div class="dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        Hi, <span class="username">{{name}}</span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+                        <a class="dropdown-item" href="/profile/">Profile</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item text-danger" href="/logout/">Logout</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+
+<!-- ... (rest of the code remains unchanged) ... -->
+
+<div class="container mt-5">
+    {% if messages %}
+    <div class="message-container">
+        {% for message in messages %}
+        <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    <div class="row justify-content-center">
+        <div class="col-md-10 content-container mb-3">
+            <!-- Displaying appointments using a Bootstrap table -->
+            <h4>Upcoming Appointments</h4>
+            <!--            <table class="table table-striped">-->
+            <!--                <thead>-->
+            <!--                <tr>-->
+            <!--                    <th>Doctor</th>-->
+            <!--                    <th>Date</th>-->
+            <!--                    <th>Time</th>-->
+            <!--                    <th>Action</th>-->
+            <!--                </tr>-->
+            <!--                </thead>-->
+            <!--                <tbody>-->
+            <!--                &lt;!&ndash; populate with booked appointments; repeat for each appointment &ndash;&gt;-->
+            <!--                {% for f in future %}-->
+            <!--                <tr>-->
+            <!--                    <td>{{f.doctor}}</td>-->
+            <!--                    <td>{{f.date}}</td>-->
+            <!--                    <td>{{f.time}}</td>-->
+            <!--                    <td>-->
+            <!--                        <div style="display: flex;">-->
+            <!--                            <a href="/cancel/{{f.appointment_id}}"><button type="submit" class="btn btn-danger btn-sm">Cancel</button></a>-->
+            <!--                        </div>-->
+            <!--                    </td>-->
+            <!--                </tr>-->
+            <!--                {% endfor %}-->
+            <!--                </tbody>-->
+            <!--            </table>-->
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Doctor</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- populate with booked appointments; repeat for each appointment -->
+                {% for f in future %}
+                <tr style="background-color: #f5f5f5;">
+                    <td colspan="4" style=""><strong>{{f.doctor}}</strong></td>
+                </tr>
+                {% for fl in f.appointments %}
+                <tr>
+                    <td></td>
+                    <td>{{fl.date}}</td>
+                    <td>{{fl.time}}</td>
+                    <td>
+                        <div style="display: flex;">
+                            <a href="/cancel/{{fl.appointment_id}}">
+                                <button type="submit" class="btn btn-danger btn-sm">Cancel</button>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+                {% endfor %}
+                <!-- Add your single entry row here -->
+
+                </tbody>
+            </table>
+
+        </div>
+
+        <div class="col-md-10 content-container">
+            <!-- Displaying appointments using a Bootstrap table -->
+            <h4>Past Appointments</h4>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Doctor</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Status</th>
+                    <th>Prescription</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- populate with booked appointments; repeat for each appointment -->
+                {% for p in past %}
+                <tr style="background-color: #f5f5f5;">
+                    <td colspan="5" style=""><strong>{{p.doctor}}</strong></td>
+                </tr>
+                {% for pl in p.appointments %}
+                <tr>
+                    <td></td>
+                    <td>{{pl.date}}</td>
+                    <td>{{pl.time}}</td>
+                    <td>
+                        <button type="submit" class="btn btn-success btn-sm">Complete</button>
+
+                    </td>
+                    <td>
+                        <a href="/view-prescription/{{pl.appointment_id}}">
+                            <button type="submit" class="btn btn-info btn-sm">View</button>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- ... (rest of the code remains unchanged) ... -->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

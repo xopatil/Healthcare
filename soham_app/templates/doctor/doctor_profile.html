@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointment System - Doctor Profile</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #4782a1;
+            font-family: Arial, sans-serif;
+        }
+
+        .content-container {
+            background-color: #fff;
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo img {
+            width: 100px;
+        }
+
+        header {
+            background-color: #fff;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            padding: 10px 0;
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="container">
+    <div class="row align-items-center">
+        <div class="col-md-3">
+            <div class="logo text-left">
+                <img src="D:\soham_project\soham_project\static\img\logo.png" alt="Your Logo" width="300">
+                <!-- Adjust path as needed -->
+            </div>
+        </div>
+        <div class="col-md-9">
+            <nav class="nav justify-content-end">
+                <a class="nav-link" href="/doctor-appointments/">View Appointments</a>
+                <a class="nav-link" href="/analytics/">Analytics</a>
+                <!-- Greeting Dropdown -->
+                <div class="dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        Hi, <span class="username">{{name}}</span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+                        <a class="dropdown-item" href="/doctor-profile/">Profile</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item text-danger" href="/logout/">Logout</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 content-container">
+            <h4>Doctor's Profile</h4>
+            <!-- Display the doctor details; in practice these will be dynamically populated from the Django backend -->
+            <p><strong>Name:</strong> {{ name }}</p>
+            <p><strong>Registration Number:</strong> {{ registration_number }}</p>
+            <p><strong>Mobile Number:</strong> {{ mobile_number }}</p>
+            <p><strong>Email:</strong> {{ email }}</p>
+            <p><strong>Address:</strong> {{ address }}</p>
+            <p><strong>Gender:</strong> {{ gender }}</p>
+            <p><strong>Date of Birth:</strong> {{ date_of_birth }}</p>
+            <p><strong>Age:</strong> {{ age }}</p>
+            <p><strong>Qualification:</strong> {{ qualification }}</p>
+            <!--<a href="/edit-profile/" class="btn btn-primary mt-3">Edit Profile</a>-->
+        </div>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

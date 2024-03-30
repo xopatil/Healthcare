@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointment System</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #92c2df;
+            font-family: Arial, sans-serif;
+        }
+
+        .content-container {
+            background-color: #fff;
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo img {
+            width: 100px;
+        }
+
+        header {
+            background-color: #fff;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            padding: 10px 0;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<header class="container">
+    <div class="row align-items-center">
+        <div class="col-md-3">
+            <div class="logo text-left">
+                <img src="../../static/img/logo.png" alt="Your Logo" width="300"><!-- Adjust path as needed -->
+            </div>
+        </div>
+        <div class="col-md-9">
+            <nav class="nav justify-content-end">
+                <a class="nav-link" href="/book-appointment/">Book Appointment</a>
+                <a class="nav-link" href="/view-appointments/">View Appointments</a>
+
+                <!-- Greeting Dropdown -->
+                <div class="dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        Hi, <span class="username">{{name}}</span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+                        <a class="dropdown-item" href="/profile/">Profile</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item text-danger" href="/logout/">Logout</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+
+
+    </div>
+</header>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 content-container">
+            <!-- Since you want the homepage to default to the "Book Appointment" page: -->
+            <h4>Book Appointment</h4>
+            <form action="/book-appointment/" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="doctorSelect">Choose Doctor:</label>
+                    <select class="form-control" id="doctorSelect" name="doctorSelect" required>
+                        <option value="null" selected disabled>Select Doctor</option>
+                        {% for i in data %}
+                        <option value="{{i.id}}">{{i.name}}</option>
+                        {% endfor %}
+                        <!-- populate with doctors -->
+                        <!--                        <option value="doctor1"></option>-->
+                        <!--                        <option value="doctor2"></option>-->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="appointmentDate">Date:</label>
+                    <input type="date" class="form-control" id="appointmentDate" name="appointmentDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="timeSlot">Time Slot:</label>
+                    <select class="form-control" id="timeSlot" name="timeSlot" required>
+                        <option value="9AM-10AM">9AM-10AM</option>
+                        <option value="10AM-11AM">10AM-11AM</option>
+                        <option value="11AM-12PM">11AM-12PM</option>
+                        <option value="12PM-1PM">12PM-1PM</option>
+                        <option value="1PM-2PM">1PM-2PM</option>
+                        <option value="2PM-3PM">2PM-3PM</option>
+                        <option value="3PM-4PM">3PM-4PM</option>
+                        <option value="4PM-5PM">4PM-5PM</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Book</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+<script>
+    // Other scripts ...
+
+    // Set the min attribute for the date input to today's date
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
+    var yyyy = today.getFullYear();
+
+    today = yyyy + '-' + mm + '-' + dd;
+    document.getElementById("appointmentDate").setAttribute("min", today);
+</script>
+<script>
+    $(document).ready(function() {
+    // When the value of doctorSelect changes
+    $("#appointmentDate").change(function() {
+        var selectedDoctorId = $("#doctorSelect").val();  // Get the selected doctor's ID
+        var doctorDate = $(this).val();  // Get the selected doctor's ID
+
+        if (selectedDoctorId) {  // Ensure an actual doctor was selected
+            $.ajax({
+                url: '/get-available-times/',  // Endpoint to get available times (you should adjust this)
+                type: 'GET',
+                data: {
+                    'doctor_id': selectedDoctorId,
+                    'date':doctorDate
+                },
+                dataType: 'json',
+                success: function(data) {
+                    // Assuming the server returns a list of available times
+                    // Clear previous options
+                    $("#timeSlot").empty();
+
+                    // Add each available time as an option
+                    $.each(data.available_times, function(index, timeSlot) {
+                        $("#timeSlot").append('<option value="' + timeSlot + '">' + timeSlot + '</option>');
+                    });
+                },
+                error: function(error) {
+                    console.log("Error:", error);
+                }
+            });
+        }
+    });
+});
+</script>
+</html>
